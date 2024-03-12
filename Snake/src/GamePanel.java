@@ -29,7 +29,7 @@ public class GamePanel extends JPanel implements ActionListener {
     GamePanel(){
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
-        this.setBackground(Color.darkGray);
+        this.setBackground(Color.BLACK);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
         startGame();
@@ -47,12 +47,23 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
     public void draw(Graphics g){
-        for(int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++){
+        for(int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++){ // for drawing grids currently invisible bcz the clr of grid line and background is black
             g.drawLine(i*UNIT_SIZE,0, i*UNIT_SIZE, SCREEN_HEIGHT);
             g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
         }
-        g.setColor(Color.red);
+        g.setColor(Color.red); // color of the snake food(apple)
         g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+
+        for(int i=0;i < bodyParts;i++){ // drawing snake body
+            if(i==0){ // for snake head
+                g.setColor(Color.green);
+                g.fillRect(x[i],y[i],UNIT_SIZE,UNIT_SIZE);
+            }
+            else { // for snake body
+                g.setColor(new Color(45,180,0));
+                g.fillRect(x[i],y[i],UNIT_SIZE,UNIT_SIZE);
+            }
+        }
 
     }
     public void newApple(){
@@ -61,6 +72,24 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
     public void move(){
+        for(int i = bodyParts; i>0; i--){
+            x[i] = x[i-1];
+            y[i] = y[i-1];
+        }
+        switch(direction){
+            case 'U':
+                y[0] = y[0] - UNIT_SIZE;
+                break;
+            case 'D':
+                y[0] = y[0] + UNIT_SIZE;
+                break;
+            case 'L':
+                x[0] = x[0] - UNIT_SIZE;
+                break;
+            case 'R':
+                x[0] = x[0] + UNIT_SIZE;
+                break;
+        }
 
     }
     public void checkApple(){
@@ -75,6 +104,12 @@ public class GamePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(running){
+            move();
+            checkApple();
+            checkCollisions();
+        }
+        repaint();
 
     }
 

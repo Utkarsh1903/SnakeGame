@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.GraphicsEnvironment;
 import java.util.*;
 
 
@@ -47,22 +48,30 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
     public void draw(Graphics g){
-        for(int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++){ // for drawing grids currently invisible bcz the clr of grid line and background is black
-            g.drawLine(i*UNIT_SIZE,0, i*UNIT_SIZE, SCREEN_HEIGHT);
-            g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
-        }
-        g.setColor(Color.red); // color of the snake food(apple)
-        g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+        if(running) {
+            for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) { // for drawing grids currently invisible bcz the clr of grid line and background is black
+                g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+                g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
+            }
+            g.setColor(Color.red); // color of the snake food(apple)
+            g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
 
-        for(int i=0;i < bodyParts;i++){ // drawing snake body
-            if(i==0){ // for snake head
-                g.setColor(Color.green);
-                g.fillRect(x[i],y[i],UNIT_SIZE,UNIT_SIZE);
+            for (int i = 0; i < bodyParts; i++) { // drawing snake body
+                if (i == 0) { // for snake head
+                    g.setColor(Color.green);
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                } else { // for snake body
+                    g.setColor(new Color(45, 180, 0));
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                }
+                g.setColor(Color.red);
+                g.setFont(new Font("SignPainter", Font.BOLD, 30));
+                FontMetrics metrics = getFontMetrics(g.getFont());
+                g.drawString("Score: "+applesEaten,(SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2,g.getFont().getSize());
             }
-            else { // for snake body
-                g.setColor(new Color(45,180,0));
-                g.fillRect(x[i],y[i],UNIT_SIZE,UNIT_SIZE);
-            }
+        }
+        else {
+            gameOver(g);
         }
 
     }
@@ -124,7 +133,15 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
     public void gameOver(Graphics g){
+        g.setColor(Color.red);
+        g.setFont(new Font("SignPainter", Font.BOLD, 75));
+        FontMetrics metrics1 = getFontMetrics(g.getFont());
+        g.drawString("Game Over ",(SCREEN_WIDTH - metrics1.stringWidth("Game Over"))/2,SCREEN_HEIGHT/2);
 
+        g.setColor(Color.red);
+        g.setFont(new Font("SignPainter", Font.BOLD, 40));
+        FontMetrics metrics2 = getFontMetrics(g.getFont());
+        g.drawString("Score: "+applesEaten,(SCREEN_WIDTH - metrics2.stringWidth("Score: "+applesEaten))/2,g.getFont().getSize());
     }
 
     @Override

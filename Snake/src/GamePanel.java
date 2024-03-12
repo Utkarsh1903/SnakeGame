@@ -16,7 +16,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int DELAY = 75;
     final int x[] = new int[GAME_UNITS];
     final int y [] = new int[GAME_UNITS];
-    int bodyParts = 6;
+    int bodyParts = 1;
     int applesEaten;
     int appleX;
     int appleY;
@@ -93,6 +93,11 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
     public void checkApple(){
+        if((x[0]==appleX)&&(y[0]==appleY)){
+            bodyParts++;
+            applesEaten++;
+            newApple();
+        }
 
     }
     public void checkCollisions(){
